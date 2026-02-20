@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>adalovelace.ai · The Unfinished Invention</title>
+    <!-- Fonts: Syne (display) + Inter (UI) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 (free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0c0b0a;
+            font-family: 'Inter', sans-serif;
+            color: #e3dbd2;
+            line-height: 1.5;
+        }
+
+        .noise {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJmIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc0IiBudW1PY3RhdmVzPSIzIiAvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNmKSIgb3BhY2l0eT0iMC4wNCIgLz48L3N2Zz4=');
+            pointer-events: none;
+            opacity: 0.25;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 2rem 2rem 3rem;
+            position: relative;
+            z-index: 5;
+        }
+
+        /* header / nav minimal */
+        .nav-minimal {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0 3rem;
+            border-bottom: 1px solid rgba(205, 157, 110, 0.15);
+            margin-bottom: 3rem;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+        .nav-minimal .tag {
+            text-transform: uppercase;
+            color: #b38e6d;
+            font-weight: 400;
+        }
+        .nav-minimal .price-badge {
+            background: rgba(179, 142, 109, 0.12);
+            border: 1px solid rgba(179, 142, 109, 0.3);
+            padding: 0.5rem 1.5rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* hero */
+        .hero {
+            margin-bottom: 6rem;
+        }
+        .pre-title {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            color: #b38e6d;
+            margin-bottom: 1.5rem;
+            font-weight: 300;
+        }
+        .domain-name {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(3rem, 10vw, 5.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            text-transform: uppercase;
+            color: #f2eae1;
+            margin-bottom: 1.5rem;
+            max-width: 900px;
+        }
+        .domain-name .lovelace {
+            color: #b38e6d;
+            border-bottom: 3px solid rgba(179, 142, 109, 0.3);
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+        .hero-description {
+            font-size: 1.3rem;
+            max-width: 700px;
+            font-weight: 300;
+            color: #cbbcaa;
+            margin: 1.5rem 0 2.5rem;
+            border-left: 4px solid #b38e6d;
+            padding-left: 2rem;
+            font-style: italic;
+        }
+
+        .pricing-primary {
+            background: linear-gradient(145deg, #161412, #0f0e0c);
+            padding: 1.8rem 2.5rem;
+            border-radius: 60px;
+            display: inline-flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 2.5rem;
+            border: 1px solid #5e4f3f;
+            margin: 1.5rem 0 3rem;
+        }
+        .price-large {
+            font-size: 3.5rem;
+            font-weight: 700;
+            font-family: 'Syne', sans-serif;
+            color: #f0dccb;
+        }
+        .price-large small {
+            font-size: 1.1rem;
+            font-weight: 300;
+            color: #b38e6d;
+            margin-left: 0.8rem;
+        }
+        .pricing-primary .btn-plain {
+            background: #b38e6d;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1.3rem;
+            color: #0c0b0a;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            border: 2px solid #b38e6d;
+        }
+        .pricing-primary .btn-plain:hover {
+            background: transparent;
+            color: #b38e6d;
+        }
+        .contact-link {
+            font-size: 1.2rem;
+            color: #bba48d;
+            text-decoration: none;
+            border-bottom: 2px dotted #5e4f3f;
+        }
+        .contact-link i {
+            margin-right: 0.5rem;
+        }
+
+        /* pillars */
+        .pillars {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            margin: 5rem 0;
+        }
+        .pillar {
+            background: rgba(22, 20, 18, 0.8);
+            backdrop-filter: blur(4px);
+            padding: 2.5rem 2rem;
+            border-radius: 40px;
+            border: 1px solid #3e352b;
+            transition: 0.2s;
+        }
+        .pillar:hover {
+            border-color: #b38e6d;
+            transform: translateY(-5px);
+        }
+        .pillar i {
+            font-size: 2.8rem;
+            color: #b38e6d;
+            margin-bottom: 1.8rem;
+        }
+        .pillar h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .pillar p {
+            color: #bfb3a6;
+            font-size: 1rem;
+        }
+
+        /* domain intelligence */
+        .intel-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            background: #12100e;
+            border-radius: 50px;
+            padding: 3rem;
+            margin: 5rem 0;
+            border: 1px solid #4d4034;
+        }
+        .intel-left {
+            border-right: 1px dashed #5f4f3e;
+            padding-right: 2rem;
+        }
+        .intel-left h4 {
+            font-size: 1.8rem;
+            font-family: 'Syne', sans-serif;
+            margin-bottom: 2rem;
+        }
+        .spec-line {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #3d352e;
+            padding: 1rem 0;
+            font-size: 1rem;
+        }
+        .intel-right {
+            padding-left: 1rem;
+        }
+        .intel-right .quote {
+            font-size: 1.4rem;
+            font-style: italic;
+            font-weight: 300;
+            margin-bottom: 2rem;
+        }
+
+        /* final contact */
+        .final-contact {
+            text-align: center;
+            padding: 3.5rem 2rem;
+            background: rgba(179, 142, 109, 0.05);
+            border-radius: 100px 20px 100px 20px;
+            margin: 4rem 0 3rem;
+        }
+        .final-contact .email-big {
+            font-size: 2rem;
+            font-family: 'Syne', sans-serif;
+            background: #1e1915;
+            display: inline-block;
+            padding: 0.8rem 2.5rem;
+            border-radius: 80px;
+            border: 1px solid #b38e6d;
+            margin: 1.5rem 0;
+        }
+        .final-contact a {
+            color: #f0dccb;
+            text-decoration: none;
+            border-bottom: 2px solid #b38e6d;
+        }
+        footer {
+            text-align: center;
+            opacity: 0.5;
+            font-size: 0.85rem;
+        }
+
+        /* mobile adjustments */
+        @media (max-width: 700px) {
+            .pricing-primary {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.2rem;
+            }
+            .intel-grid {
+                grid-template-columns: 1fr;
+            }
+            .intel-left {
+                border-right: none;
+                padding-right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="noise"></div>
+    <div class="container">
+        <!-- minimal top bar -->
+        <div class="nav-minimal">
+            <span class="tag"><i class="far fa-gem" style="color:#b38e6d;"></i> exclusive name · historical .ai</span>
+            <span class="price-badge"><i class="fas fa-tag"></i> $1,495 USD</span>
+        </div>
+
+        <!-- hero section -->
+        <div class="hero">
+            <div class="pre-title">the analytical engine 2.0</div>
+            <h1 class="domain-name">ada<span class="lovelace">lovelace</span>ai.com</h1>
+            <div class="hero-description">
+                “a domain for the unwritten chapter of intelligence — part poetry, part algorithm.”
+            </div>
+
+            <!-- pricing + action -->
+            <div class="pricing-primary">
+                <div class="price-large">$1,495 <small>firm</small></div>
+                <a href="#" class="btn-plain"><i class="fas fa-bolt"></i> buy on namecheap</a>
+                <a href="mailto:exsherie@gmail.com?subject=Ada%20Lovelace%20AI%20inquiry" class="contact-link"><i class="fas fa-paper-plane"></i> email</a>
+            </div>
+        </div>
+
+        <!-- three pillars of value -->
+        <div class="pillars">
+            <div class="pillar">
+                <i class="fas fa-feather"></i>
+                <h3>the name</h3>
+                <p>Ada Lovelace — the first programmer, a visionary. Her name carries academic weight, feminist power, and algorithmic mystique.</p>
+            </div>
+            <div class="pillar">
+                <i class="fas fa-crown"></i>
+                <h3>the extension</h3>
+                <p>.ai is the new .com for forward-looking companies. This isn't a keyword; it's an identity that signals AI natively.</p>
+            </div>
+            <div class="pillar">
+                <i class="fas fa-building-columns"></i>
+                <h3>the mission</h3>
+                <p>Perfect for an AI ethics foundation, a women-in-tech fund, a research journal, or a literary GPT.</p>
+            </div>
+        </div>
+
+        <!-- domain intelligence / specs -->
+        <div class="intel-grid">
+            <div class="intel-left">
+                <h4>domain specs</h4>
+                <div class="spec-line"><span>domain age</span> <span>2025 · fresh</span></div>
+                <div class="spec-line"><span>length</span> <span>15 characters</span></div>
+                <div class="spec-line"><span>registrar</span> <span>Namecheap</span></div>
+                <div class="spec-line"><span>listing</span> <span>exclusive</span></div>
+                <div class="spec-line"><span>price</span> <span>$1,495 USD</span></div>
+            </div>
+            <div class="intel-right">
+                <div class="quote">“a domain that sounds like a movement, not a URL.”</div>
+                <div style="margin-top: 1.5rem; background: #1d1814; padding: 1.2rem; border-radius: 30px; font-size: 0.95rem;">
+                    <i class="fas fa-shield-halved"></i> includes free SSL + brand-ready landing page
+                </div>
+            </div>
+        </div>
+
+        <!-- final contact block with developer email -->
+        <div class="final-contact">
+            <i class="fas fa-envelope-open-text" style="font-size: 2.5rem; color:#b38e6d; margin-bottom: 1rem;"></i>
+            <div style="font-size: 1.2rem;">contact developer for questions or offers:</div>
+            <div class="email-big"><a href="mailto:exsherie@gmail.com?subject=Ada%20Lovelace%20AI%20acquisition">exsherie@gmail.com</a></div>
+            <p style="margin-top: 1.5rem; font-size: 0.9rem;">fast transfer · payment via namecheap escrow</p>
+        </div>
+
+        <!-- footer -->
+        <footer>
+            <p>© 2026 · adalovelaceai.com · listed on namecheap</p>
+        </footer>
+    </div>
+</body>
+</html>
